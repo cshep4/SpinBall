@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class SpinBall  extends Game {
 
 	private AppInterface appInterface;
-	private void setInterface(AppInterface appInterface) {
+	public void setInterface(AppInterface appInterface) {
 		this.appInterface = appInterface;
 	}
 
