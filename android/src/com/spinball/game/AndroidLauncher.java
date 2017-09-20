@@ -6,11 +6,23 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.spinball.game.SpinBall;
 
-public class AndroidLauncher extends AndroidApplication {
+public class AndroidLauncher extends AndroidApplication implements AppInterface{
+
+	SpinBall spinBall;
+
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new SpinBall(), config);
+
+		spinBall = new SpinBall();
+		spinBall.setInterface(this);
+
+		initialize(spinBall, config);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
 	}
 }
