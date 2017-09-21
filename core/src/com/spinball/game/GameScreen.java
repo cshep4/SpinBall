@@ -27,8 +27,6 @@ public class GameScreen implements Screen {
     private final int LEFT = 1;
     private final int RIGHT = -1;
 
-    Circle tempBall;
-
     //--------------TEXTURES
     Texture ball;
     //----------
@@ -107,7 +105,6 @@ public class GameScreen implements Screen {
         debugRenderer.begin(ShapeRenderer.ShapeType.Line);
         debugRenderer.circle(player.getCircle().x, player.getCircle().y, player.getCircle().radius);
         for (Ball ball : balls) {
-            //game.batch.draw(ball.getTexture(), ball.getCircle().x,ball.getCircle().y,ball.getCircle().radius*2,ball.getCircle().radius*2);
             debugRenderer.circle(ball.getCircle().x, ball.getCircle().y, ball.getCircle().radius);
 
         }
@@ -155,22 +152,10 @@ public class GameScreen implements Screen {
     public void drawEverything(){
 
         game.batch.begin();
-
-        // get text layout height and width and place it in the middle of the screen----------------
-        String gameString = "Game";
-        GlyphLayout gameTextLayout = new GlyphLayout(game.font, gameString);
-        float gameTextWidth = gameTextLayout.width;
-        float gameTextHeight = gameTextLayout.height;
-        //game.font.draw(game.batch, gameString, screenXMax / 2 - (gameTextWidth / 2),
-        //        screenYMax / 2 - 100 - (gameTextHeight / 2));
-        //------------------------------------------------------------------------------------------
-
         //---------------------------------DRAW BALLS
         for (Ball ball : balls) {
             game.batch.draw(ball.getTexture(), ball.getCircle().x-ball.getCircle().radius,ball.getCircle().y-ball.getCircle().radius,ball.getCircle().radius*2,ball.getCircle().radius*2);
-
         }
-
         //---------------------------------DRAW PLAYER
         game.batch.draw(player.getTexture(), player.getCircle().x-player.getCircle().radius,player.getCircle().y-player.getCircle().radius,player.getCircle().radius*2,player.getCircle().radius*2);
         //--------------------------------------------
@@ -219,15 +204,6 @@ public class GameScreen implements Screen {
             //---
             double rot = Math.toRadians(360 -balls.get(player.getOrbitingBall()).getRotationAngle());
 
-            double cX = balls.get(player.getOrbitingBall()).getCircle().x;
-            double cY = balls.get(player.getOrbitingBall()).getCircle().y;
-            double xDiff = cX - player.getCircle().x;
-            double yDiff = cY - player.getCircle().y;
-
-            //double rot = Math.asin(cY/cX);
-
-//            rot = calcRotationAngle(cX, cY, player.getCircle().x, player.getCircle().y);
-
             double xDirection = Math.sin(rot) * (player.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
             double yDirection = Math.cos(rot) * (player.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
 
@@ -239,7 +215,7 @@ public class GameScreen implements Screen {
     }
 
     public void isCollided() {
-        Circle tempBall = new Circle(0, 0, 0);
+        Circle tempBall;
         for (int i=0; i<balls.size(); i++) {
             if (i != player.getOrbitingBall()) {
                 tempBall = new Circle(balls.get(i).getCircle().x, balls.get(i).getCircle().y, balls.get(i).getCircle().radius);
@@ -255,12 +231,6 @@ public class GameScreen implements Screen {
                 }
             }
         }
-
-//        debugRenderer.setProjectionMatrix(camera.combined);
-//        debugRenderer.setColor(Color.CYAN);
-//        debugRenderer.begin(ShapeRenderer.ShapeType.Line);
-//        debugRenderer.circle(tempBall.x, tempBall.y, tempBall.radius);
-//        debugRenderer.end();
     }
 
     public double calcRotationAngle(double centreX, double centreY, double playerX, double playerY) {
@@ -291,8 +261,6 @@ public class GameScreen implements Screen {
                 extraAngle = 180;
             }
         }
-
-        //tempBall = new Circle( (float) (cX + xDiff), (float) (cY - yDiff), player_radius*2);
 
         double rotationAngle = 360- (Math.toDegrees(Math.atan(opposite/adjacent)) + extraAngle);
 
