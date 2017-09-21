@@ -45,7 +45,7 @@ public class GameScreen implements Screen {
 
     ShapeRenderer debugRenderer = new ShapeRenderer();
 
-    //---------------------
+    //----------------------
 
     public GameScreen(final SpinBall game) {
         this.game = game;
