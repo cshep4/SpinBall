@@ -66,7 +66,7 @@ public class GameScreen implements Screen {
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
-        
+
         processUserInput();
 
         updateEverything();
