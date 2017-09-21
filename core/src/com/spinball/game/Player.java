@@ -7,30 +7,46 @@ import com.badlogic.gdx.math.Circle;
  * Created by thomaseyre on 21/09/2017.
  */
 
-public class Player {
-
-    private Circle circle;
-    private Texture playerTexture;
+public class Player extends GameObject {
+    private boolean inOrbit;
+    private int orbitingBall;
+    private int lives = 3;
+    private int playerSpeed = 300;
 
     Player(Circle circle, Texture playerTexture){
-        this.circle = circle;
-        this.playerTexture = playerTexture;
+        super(circle, playerTexture);
     }
 
-    public Circle getCircle() {
-        return circle;
+    public boolean isInOrbit() {
+        return inOrbit;
     }
 
-    public void setCircle(Circle circle) {
-        this.circle = circle;
+    public void setInOrbit(boolean inOrbit) {
+        this.inOrbit = inOrbit;
     }
 
-    public Texture getPlayerTexture() {
-        return playerTexture;
+    public int getOrbitingBall() {
+        return orbitingBall;
     }
 
-    public void setPlayerTexture(Texture playerTexture) {
-        this.playerTexture = playerTexture;
+    public void setOrbitingBall(int orbitingBall) {
+        this.orbitingBall = orbitingBall;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
+    public int getPlayerSpeed() {
+        return playerSpeed;
+    }
+
+    public void setPlayerSpeed(int playerSpeed) {
+        this.playerSpeed = playerSpeed;
     }
 }
 
