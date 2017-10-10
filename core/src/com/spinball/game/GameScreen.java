@@ -180,90 +180,41 @@ public class GameScreen implements Screen {
     }
 
     public void updateEverything(){
+        //-------------PLAYER
         if(player.isInOrbit()) {
-            for (Ball ball : balls) {
-                ball.setRotationAngle(ball.getRotationAngle() + (2 * ball.getDirection()));
-                if (ball.getRotationAngle() >= 360 && ball.getDirection() == LEFT) {
-                    ball.setRotationAngle(0);
+                for (Ball ball : balls) {
+                    ball.setRotationAngle(ball.getRotationAngle() + (2 * ball.getDirection()));
+                    if (ball.getRotationAngle() >= 360 && ball.getDirection() == LEFT) {
+                        ball.setRotationAngle(0);
+                    }
+                    if (ball.getRotationAngle() <= 0 && ball.getDirection() == RIGHT) {
+                        ball.setRotationAngle(360);
+                    }
                 }
-                if (ball.getRotationAngle() <= 0 && ball.getDirection() == RIGHT) {
-                    ball.setRotationAngle(360);
-                }
+
+                double rot = Math.toRadians(balls.get(player.getOrbitingBall()).getRotationAngle());
+                double cX = balls.get(player.getOrbitingBall()).getCircle().x;
+                double cY = balls.get(player.getOrbitingBall()).getCircle().y;
+                double x = cX;
+                double y = cY + balls.get(player.getOrbitingBall()).getCircle().radius + player_radius + 2;
+
+                player.getCircle().x = (float) (Math.cos(rot) * (x - cX) - Math.sin(rot) * (y - cY) + cX);
+                player.getCircle().y = (float) (Math.sin(rot) * (x - cX) + Math.cos(rot) * (y - cY) + cY);
             }
+            else{
+                //---
+                double rot = Math.toRadians(360 -balls.get(player.getOrbitingBall()).getRotationAngle());
 
-            double rot = Math.toRadians(balls.get(player.getOrbitingBall()).getRotationAngle());
-            double cX = balls.get(player.getOrbitingBall()).getCircle().x;
-            double cY = balls.get(player.getOrbitingBall()).getCircle().y;
-            double x = cX;
-            double y = cY + balls.get(player.getOrbitingBall()).getCircle().radius + player_radius + 2;
+                double xDirection = Math.sin(rot) * (player.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
+                double yDirection = Math.cos(rot) * (player.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
 
-            player.getCircle().x = (float) (Math.cos(rot) * (x - cX) - Math.sin(rot) * (y - cY) + cX);
-            player.getCircle().y = (float) (Math.sin(rot) * (x - cX) + Math.cos(rot) * (y - cY) + cY);
+                player.getCircle().x += xDirection;
+                player.getCircle().y += yDirection;
+
+                player.isCollided(balls);
         }
-        else{
-            //---
-            double rot = Math.toRadians(360 -balls.get(player.getOrbitingBall()).getRotationAngle());
+        //-----------------------
 
-            double xDirection = Math.sin(rot) * (player.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
-            double yDirection = Math.cos(rot) * (player.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
 
-            player.getCircle().x += xDirection;
-            player.getCircle().y += yDirection;
-
-            isCollided();
-        }
-    }
-
-    public void isCollided() {
-        Circle tempBall;
-        for (int i=0; i<balls.size(); i++) {
-            if (i != player.getOrbitingBall()) {
-                tempBall = new Circle(balls.get(i).getCircle().x, balls.get(i).getCircle().y, balls.get(i).getCircle().radius);
-                if (player.getCircle().overlaps(tempBall)) {
-                    player.setOrbitingBall(i);
-                    player.setInOrbit(true);
-
-                    double cX = balls.get(i).getCircle().x;
-                    double cY = balls.get(i).getCircle().y;
-
-                    double rotationAngle = calcRotationAngle(cX, cY, player.getCircle().x, player.getCircle().y);
-                    balls.get(i).setRotationAngle(rotationAngle);
-                }
-            }
-        }
-    }
-
-    public double calcRotationAngle(double centreX, double centreY, double playerX, double playerY) {
-        double xDiff = centreX - playerX;
-        double yDiff = centreY - playerY;
-
-        double opposite = 0;
-        double adjacent = 0;
-        int extraAngle = 0;
-
-        if (xDiff < 0) {
-            if (yDiff < 0) {
-                opposite = Math.abs(xDiff);
-                adjacent = Math.abs(yDiff);
-            } else {
-                adjacent = Math.abs(xDiff);
-                opposite = Math.abs(yDiff);
-                extraAngle = 90;
-            }
-        } else { // xDiff >= 0
-            if (yDiff < 0) {
-                adjacent = Math.abs(xDiff);
-                opposite = Math.abs(yDiff);
-                extraAngle = 270;
-            } else {
-                opposite = Math.abs(xDiff);
-                adjacent = Math.abs(yDiff);
-                extraAngle = 180;
-            }
-        }
-
-        double rotationAngle = 360- (Math.toDegrees(Math.atan(opposite/adjacent)) + extraAngle);
-
-        return rotationAngle;
     }
 }
